@@ -1,13 +1,16 @@
 package br.com.alura.screensound.principal;
 
 import br.com.alura.screensound.model.Artista;
+import br.com.alura.screensound.model.Musica;
 import br.com.alura.screensound.model.TipoArtista;
 import br.com.alura.screensound.repository.ArtistaRepository;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
-    private final ArtistaRepository repositorio;
+    private ArtistaRepository repositorio;
     private Scanner leitura = new Scanner(System.in);
 
     public Principal(ArtistaRepository repositorio) {
@@ -63,9 +66,24 @@ public class Principal {
     }
 
     private void listarMusicas() {
+        List<Artista> artistas = repositorio.findAll();
+        artistas.forEach(System.out::println);
     }
 
     private void cadastrarMusicas() {
+        System.out.println("Digite o nome do artista: ");
+        var nome = leitura.nextLine();
+        Optional<Artista> artista = repositorio.findByNomeContainingIgnoreCase(nome);
+        if (artista.isPresent()) {
+            System.out.println("Informe o título da música: ");
+            var nomeMusica = leitura.nextLine();
+            Musica musica = new Musica(nomeMusica);
+            musica.setArtista(artista.get());
+            artista.get().getMusicas().add(musica);
+            repositorio.save(artista.get());
+        } else {
+            System.out.println("Artista não encontrado");
+        }
     }
 
     private void cadastrarArtista() {
