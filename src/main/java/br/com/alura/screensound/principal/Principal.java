@@ -63,11 +63,15 @@ public class Principal {
     }
 
     private void buscarMusicaPorArtista() {
+        System.out.println("Buscar músicas de qual artista? ");
+        var nome = leitura.nextLine();
+        List<Musica> musicas = repositorio.buscarMusicasPorArtista(nome);
+        musicas.forEach(System.out::println);
     }
 
     private void listarMusicas() {
         List<Artista> artistas = repositorio.findAll();
-        artistas.forEach(System.out::println);
+        artistas.forEach(a -> a.getMusicas().forEach(System.out::println));
     }
 
     private void cadastrarMusicas() {
