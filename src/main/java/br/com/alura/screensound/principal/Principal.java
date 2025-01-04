@@ -1,9 +1,19 @@
 package br.com.alura.screensound.principal;
 
+import br.com.alura.screensound.model.Artista;
+import br.com.alura.screensound.model.TipoArtista;
+import br.com.alura.screensound.repository.ArtistaRepository;
+
 import java.util.Scanner;
 
 public class Principal {
+    private final ArtistaRepository repositorio;
     private Scanner leitura = new Scanner(System.in);
+
+    public Principal(ArtistaRepository repositorio) {
+        this.repositorio = repositorio;
+    }
+
     public void exibeMenu() {
         var opcao = -1;
         while (opcao !=0) {
@@ -59,5 +69,18 @@ public class Principal {
     }
 
     private void cadastrarArtista() {
+        var cadastrarNovo = "S";
+
+        while (cadastrarNovo.equalsIgnoreCase("S")) {
+            System.out.println("Digite o nome do artista: ");
+            var nomeArtista = leitura.nextLine();
+            System.out.println("Digite o tipo desse artista (solo, dupla ou banda): ");
+            var tipo = leitura.nextLine();
+            TipoArtista tipoArtista = TipoArtista.valueOf(tipo.toUpperCase());
+            Artista artista = new Artista(nomeArtista, tipoArtista);
+            repositorio.save(artista);
+            System.out.println("\nCadastrar novo artista? (S/N)");
+            cadastrarNovo = leitura.nextLine();
+        }
     }
 }
